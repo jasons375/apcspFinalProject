@@ -6,7 +6,7 @@ import time
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("GOMOKU")
-screen = pygame.display.set_mode((600, 600))
+screen = pygame.display.set_mode((689, 689))
 # fps
 clock = pygame.time.Clock()
 
@@ -18,7 +18,7 @@ WHITE = (255, 255, 255)
 font_title = pygame.font.SysFont("oldenglishtext", 72)
 
 # TEXT RENDER
-display_title_screen1 = font_title.render("GOMOKU.", True, BLACK)
+display_title_screen1 = font_title.render("GOMOKU", True, BLACK)
 
 # variables
 
@@ -29,6 +29,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
 
+    end_msg_center = display_end_msg.get_rect(center=screen.get_rect().center)
     pygame.display.update()
 
     clock.tick(60)
