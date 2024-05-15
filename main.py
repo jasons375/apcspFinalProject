@@ -20,6 +20,10 @@ font_title = pygame.font.SysFont("oldenglishtext", 72)
 # TEXT RENDER
 display_title_screen1 = font_title.render("GOMOKU", True, BLACK)
 
+# rectangles
+board_base = pygame.Rect(30, 30, 60, 60)
+color = (60, 60, 60)
+
 # variables
 
 # -------- Main Program Loop -----------
@@ -29,7 +33,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
 
-    end_msg_center = display_end_msg.get_rect(center=screen.get_rect().center)
+    pygame.draw.rect(screen, color, pygame.Rect(30, 30, 60, 60))
     pygame.display.update()
 
     clock.tick(60)
