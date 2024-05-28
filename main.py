@@ -1,6 +1,7 @@
 import random
 import pygame
 import time
+import math
 from stone import Stone
 
 
@@ -41,6 +42,7 @@ board_horizontal.center = board_base.center
 board_vertical.center = board_base.center
 
 # VARIABLES
+# board
 board_state = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -63,6 +65,10 @@ board_state = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 board_border = 20
+stones = []
+# misc
+turn = 1        # white = 1, black = 2
+
 
 # -------- Main Program Loop -----------
 while True:
@@ -70,7 +76,19 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+    fin = time.time()
 
+    # detecting mouse pos
+    for i in range(19):
+        for j in range(19):
+            current_board_coordinate = ((board_base.x + board_border + (36 * j)), (board_base.y + board_border + (36 * i)))
+            if math.dist(pygame.mouse.get_pos(), current_board_coordinate) < 15:
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        # do stuff when click
+                print(i, j)
+
+    # --- BLIT ----
     # DRAWING THE BOARD
     pygame.draw.rect(screen, pygame.Color("#ffd4a3"), board_base)
     # horizontal lines
@@ -84,6 +102,7 @@ while True:
         # same thing as before, just vertical
         board_vertical.center = ((board_base.left + board_border + 36 * i), board_base.center[1])
         pygame.draw.rect(screen, pygame.Color("#000000"), board_vertical)
+
 
     # PLACING STONES
     a = Stone((1, 1), "white")
