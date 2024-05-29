@@ -6,12 +6,12 @@ import pygame
 
 class Stone:
     def __init__(self, coordinates: tuple, color):
-        self.coordinates = (coordinates[0] - 1, coordinates[1] - 1)      # bc board and computer coordiantes different
+        self.coordinates = coordinates
         # self.int_coordinates = ((ord(coordinates[0]) - 96), coordinates[1])
 
-        if color.lower() == "white":
+        if color == "white" or color == 1:
             self.image = pygame.image.load("white_stone.png")
-        elif color.lower() == "black":
+        elif color == "black" or color == -1:
             self.image = pygame.image.load("black_stone.png")
 
         self.size = self.image.get_size()
