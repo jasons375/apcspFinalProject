@@ -13,8 +13,9 @@ def conv_coords(stone, board, board_border_dist, square_dist):
     location_2 = (location_1[0] - (stone.size[0] / 2), location_1[1] - (stone.size[1] / 2))
     return location_2
 
-
 def check_5_in_a_row(grid, coordinates):
+    # coordinates are index 0
+
     if grid[coordinates[1]][coordinates[0]] == 0:       # if u do this ur dumb
         return False
     else:
@@ -26,17 +27,31 @@ def check_5_in_a_row(grid, coordinates):
         delta_x, delta_y = directions_dict[direction]
         # forwards
         i = 1
-        while grid[coordinates[1] + i*delta_y][coordinates[0] + i*delta_x] == color:
-            stones_in_a_row += 1
-            i += 1
-        # backwards
+        can_go_forward = True
+        while can_go_forward:
+            if 0 < (coordinates[1] + i*delta_y) < len(grid) and 0 < (coordinates[0] + i*delta_x) < len(grid[coordinates[1]]):
+                if grid[coordinates[1] + i*delta_y][coordinates[0] + i*delta_x] == color:
+                    i += 1
+                    stones_in_a_row += 1
+                else:
+                    can_go_forward = False
+            else:
+                can_go_forward = False
         i = 1
-        while grid[coordinates[1] - i*delta_y][coordinates[0] - i*delta_x] == color:
-            stones_in_a_row += 1
-            i += 1
+        can_go_backward = True
+        while can_go_backward:
+            if 0 < (coordinates[1] - i*delta_y) < len(grid) and 0 < (coordinates[0] - i*delta_x) < len(grid[coordinates[1]]):
+                if grid[coordinates[1] - i*delta_y][coordinates[0] - i*delta_x] == color:
+                    i += 1
+                    stones_in_a_row += 1
+                else:
+                    can_go_backward = False
+            else:
+                can_go_backward = False
         if stones_in_a_row >= 5:
             return True
     return False
+
 
 
 # set up pygame modules
@@ -83,6 +98,7 @@ board_state = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+
 board_border = 20
 # placing stuff
 turn = 1        # white = 1, black = 2
@@ -132,10 +148,11 @@ while True:
                     game_won = True
                     if turn == 1:
                         game_winner = "white"
+                        print(game_winner)
                     elif turn == -1:
                         game_winner = "black"
+                        print(game_winner)
                 turn *= -1
-    print(game_winner)
 
 
 
