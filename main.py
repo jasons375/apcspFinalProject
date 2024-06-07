@@ -3,6 +3,7 @@ import pygame
 import time
 import math
 from stone import Stone
+from red_rect import RedRect
 
 
 def conv_coords(stone, board, board_border_dist, square_dist):
@@ -13,11 +14,13 @@ def conv_coords(stone, board, board_border_dist, square_dist):
     location_2 = (location_1[0] - (stone.size[0] / 2), location_1[1] - (stone.size[1] / 2))
     return location_2
 
+
 def check_5_in_a_row(grid, coordinates):
     # coordinates are index 0
+    five_in_a_row_coords = [coordinates]
 
     if grid[coordinates[1]][coordinates[0]] == 0:       # if u do this ur dumb
-        return False
+        return True, five_in_a_row_coords
     else:
         color = grid[coordinates[1]][coordinates[0]]
     directions = ("E", "SE", "S", "SW")
@@ -29,10 +32,13 @@ def check_5_in_a_row(grid, coordinates):
         i = 1
         can_go_forward = True
         while can_go_forward:
-            if 0 < (coordinates[1] + i*delta_y) < len(grid) and 0 < (coordinates[0] + i*delta_x) < len(grid[coordinates[1]]):
-                if grid[coordinates[1] + i*delta_y][coordinates[0] + i*delta_x] == color:
+            check_coordinates_x = coordinates[0] + i*delta_x
+            check_coordinates_y = coordinates[1] + i*delta_y
+            if 0 <= check_coordinates_x < len(grid) and 0 <= check_coordinates_y < len(grid[coordinates[1]]):
+                if grid[check_coordinates_y][check_coordinates_x] == color:
                     i += 1
                     stones_in_a_row += 1
+                    five_in_a_row_coords.append((check_coordinates_x, check_coordinates_y))
                 else:
                     can_go_forward = False
             else:
@@ -40,17 +46,20 @@ def check_5_in_a_row(grid, coordinates):
         i = 1
         can_go_backward = True
         while can_go_backward:
-            if 0 < (coordinates[1] - i*delta_y) < len(grid) and 0 < (coordinates[0] - i*delta_x) < len(grid[coordinates[1]]):
-                if grid[coordinates[1] - i*delta_y][coordinates[0] - i*delta_x] == color:
+            check_coordinates_x = coordinates[0] - i*delta_x
+            check_coordinates_y = coordinates[1] - i*delta_y
+            if 0 <= check_coordinates_x < len(grid) and 0 <= check_coordinates_y < len(grid[coordinates[1]]):
+                if grid[check_coordinates_y][check_coordinates_x] == color:
                     i += 1
                     stones_in_a_row += 1
+                    five_in_a_row_coords.append((check_coordinates_x, check_coordinates_y))
                 else:
                     can_go_backward = False
             else:
                 can_go_backward = False
         if stones_in_a_row >= 5:
-            return True
-    return False
+            return True, five_in_a_row_coords
+    return False, five_in_a_row_coords
 
 
 
@@ -119,6 +128,9 @@ board_vertical.center = board_base.center
 
 # misc
 stones = []
+red_rects = []
+win_row_is_on_board = False         # whether or not theres a 5 in a row
+win_row_coords = []                 # what the coords of the 5 in a row are
 
 # -------- Main Program Loop -----------
 while True:
@@ -144,8 +156,10 @@ while True:
                 board_state[mouse_place_coords[1]][mouse_place_coords[0]] = turn
                 stones.append(Stone(mouse_place_coords, turn))
                 mouse_can_click = False
-                if check_5_in_a_row(board_state, mouse_place_coords):
-                    game_won = True
+                win_row_is_on_board, win_row_coords = check_5_in_a_row(board_state, mouse_place_coords)
+                if win_row_is_on_board:
+                    for winning_square in win_row_coords:
+                        red_rects.append(RedRect(winning_square))
                     if turn == 1:
                         game_winner = "white"
                         print(game_winner)
@@ -173,6 +187,9 @@ while True:
     # DRAWING THE STONES
     for stone in stones:
         screen.blit(stone.image, conv_coords(stone, board_base, board_border, 36))
-    pygame.display.update()
+    # DRAWING THE RED RECTANGLES
+    for red_rect in red_rects:
+        screen.blit(red_rect.image, conv_coords(red_rect, board_base, board_border, 36))
 
+    pygame.display.update()
     clock.tick(60)
