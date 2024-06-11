@@ -1,4 +1,4 @@
-really cool APCSP projet that isn't janky at all
+really cool APCSP project that isn't janky at all
 
 
 
