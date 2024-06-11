@@ -10,8 +10,8 @@ class Stone:
         # self.int_coordinates = ((ord(coordinates[0]) - 96), coordinates[1])
 
         if color == "white" or color == 1:
-            self.image = pygame.image.load("white_stone.png")
+            self.image = pygame.image.load("images/white_stone.png")
         elif color == "black" or color == -1:
-            self.image = pygame.image.load("black_stone.png")
+            self.image = pygame.image.load("images/black_stone.png")
 
         self.size = self.image.get_size()
