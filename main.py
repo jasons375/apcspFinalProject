@@ -117,7 +117,7 @@ board_object.center = (screen.get_rect().centerx - 180, screen.get_rect().center
 board_grid_horizontal.center = board_object.center
 board_grid_vertical.center = board_object.center
 # GAME STATE
-turn = 1        # white = 1, black = 2
+turn = -1        # white = 1, black = -1
 mouse_place_coords = (-1, -1)
 game_won = False
 game_winner = ""
